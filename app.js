@@ -1,8 +1,10 @@
 var express = require('express')
 var app = express()
+var logger = require('morgan')
 var http = require('http')
 var path = require('path')
 
+app.use(logger("short"))
 // 设置引擎
 app.set("views", path.resolve(__dirname, "views"))
 app.set("view engine", "ejs")

@@ -10,6 +10,7 @@ const fs = require('fs');
   let array = [];
   for (let i = 0, len = nav.length; i < len; i++) {
     await page.click(`#category${6 + i}`);
+    await page.waitFor(3000);
     let category = await page.evaluate((dom) => {
       let title = dom.innerText;
       let start = 1;

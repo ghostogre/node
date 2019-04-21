@@ -1,9 +1,5 @@
 const bcrypt = require('bcryptjs');
 const util = {
-  // 验证邮箱
-  checkEmail(email) {
-    return (/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/.test(email))
-  },
   // 加密
   bcryptjs(pwd) {
     let salt = bcrypt.genSaltSync(10);

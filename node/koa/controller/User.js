@@ -1,5 +1,5 @@
 // const HomeService = require('../service/home')
-const utils = require('../utils/utils')
+const { validateLogin, validateRegister} = require('../validation/User')
 module.exports = {
   login: async(ctx, next) => {
     const { app } = ctx;
@@ -7,15 +7,11 @@ module.exports = {
       email,
       password
     } = ctx.request.body;
-    if (!email || !password) {
-      ctx.body = {
+    let errmsg = validateLogin(ctx.request.body);
+    if (errmsg) {
+      ctx.response.body = {
         errcode: 10001,
-        errmsg: '缺少关键参数!'
-      };
-    } else if (!utils.checkEmail(email)) {
-      ctx.body = {
-        errcode: 10002,
-        errmsg: '邮箱格式错误!'
+        errmsg
       };
     } else {
       let data = await app.service.User.login(email, password);
@@ -29,19 +25,36 @@ module.exports = {
       email,
       password
     } = ctx.request.body;
-    if (!name || !password || !email) {
+    let errmsg = validateRegister(ctx.request.body);
+    if (errmsg) {
       ctx.body = {
         errcode: 10001,
-        errmsg: '缺少关键参数!'
-      };
-    } else if (!utils.checkEmail(email)) {
-      ctx.body = {
-        errcode: 10002,
-        errmsg: '邮箱格式错误!'
+        errmsg
       };
     } else {
       let data = await app.service.User.register(name, password, email);
       ctx.response.body = data;
+    }
+  },
+  // 用户信息获取
+  getMsg: async (ctx, next) => {
+    const user = ctx.state.user;
+    if (user) {
+      ctx.body = {
+        errcode: 0,
+        data: {
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email
+        },
+        errmsg: 'success'
+      }
+    } else {
+      ctx.body = {
+        errcode: 10002,
+        errmsg: '用户认证失败!'
+      }
     }
   }
 }

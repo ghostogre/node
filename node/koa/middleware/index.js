@@ -7,6 +7,7 @@ const staticFiles = require('koa-static')
 const mylog = require('./log')
 const httpError = require('./http-error')
 const bodyParser = require('koa-bodyparser')()
+const passport = require('koa-passport')
 
 module.exports = (app) => {
   /**
@@ -47,6 +48,11 @@ module.exports = (app) => {
   }))
   app.use(json())
   app.use(bodyParser)
+
+  app.use(passport.initialize())
+  app.use(passport.session())
+  // 回调到config文件中的passport.js
+  require('../utils/passport')(passport)
 
   // 增加错误的监听处理
   app.on("error", (err, ctx) => {
